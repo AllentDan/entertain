@@ -30,8 +30,35 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 
 	// update status bar item once at start
 	updateStatusBarItem();
+
+	const disposable = vscode.commands.registerCommand('extension.formatTable', function () {
+		// Get the active text editor
+		const editor = vscode.window.activeTextEditor;
+
+		if (editor) {
+			const document = editor.document;
+			const selection = editor.selection;
+
+			// Get the word within the selection
+			const content = document.getText(selection);
+			const replaced = content.replaceAll('<table>','<table class=\'docutils\'>')
+			.replaceAll('<td r','<td align="center" r').replaceAll('<td c','<td align="center" c')
+			.replaceAll('<td>','<td align="center">').replaceAll('<th r','<th align="center" r')
+			.replaceAll('<th c','<th align="center" c').replaceAll('<td align="center">$MM','<td>$MM')
+			.replaceAll('<td align="center" rowspan="2">model config file</td>','<td rowspan="2">model config file</td>');
+			editor.edit(editBuilder => {
+				editBuilder.replace(selection, replaced);
+			});
+		}
+	});
+
+	subscriptions.push(disposable);
 }
 
+
+function replaceAll(string:string, search:string, replace:string) {
+  return string.split(search).join(replace);
+}
 
 function between(x:number, min:number, max:number) {
   return x >= min && x <= max;
