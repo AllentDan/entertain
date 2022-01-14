@@ -55,11 +55,6 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(disposable);
 }
 
-
-function replaceAll(string:string, search:string, replace:string) {
-  return string.split(search).join(replace);
-}
-
 function between(x:number, min:number, max:number) {
   return x >= min && x <= max;
 }
