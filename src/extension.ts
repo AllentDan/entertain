@@ -1,8 +1,28 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import {treePath} from './tree';
 
 let myStatusBarItem: vscode.StatusBarItem;
+
+
+function gettree(dir: string){
+	
+	const treeArr = treePath(dir);
+	const nums = Math.max(...treeArr.map(el=>el.str.length));
+	const tree = treeArr.map(el => el.str + ' '.repeat(nums-el.str.length+2)+'\n').join('');
+	return tree;
+}
+
+function showInputBox() {
+	const result = vscode.window.showInputBox({
+		value: 'abcdef',
+		valueSelection: [2, 4],
+		placeHolder: 'For example: fedcba. But not: 123',
+	});
+	vscode.window.showInformationMessage(`Got: ${result}`);
+	return result;
+}
 
 export function activate({ subscriptions }: vscode.ExtensionContext) {
 
@@ -30,6 +50,16 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 
 	// update status bar item once at start
 	updateStatusBarItem();
+
+	const generateTree = vscode.commands.registerCommand('extension.generateTree', function (uri) {
+		// The code you place here will be executed every time your command is executed
+		const quickPick = vscode.window.showInputBox();
+		const str = gettree(uri.fsPath);
+		vscode.env.clipboard.writeText(str);
+		vscode.window.showInformationMessage(`♥︎目录树已经复制到剪贴板上了~`);
+	});
+
+	subscriptions.push(generateTree);
 
 	const disposable = vscode.commands.registerCommand('extension.formatTable', function () {
 		// Get the active text editor

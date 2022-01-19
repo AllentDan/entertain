@@ -30,8 +30,21 @@
 			{
 				"command": "extension.formatTable",
 				"title": "Format table to sphinx style"
+			},
+			{
+				"command": "extension.generateTree",
+				"title": "Genrate a tree"
 			}
-		]
+		],
+		"menus": {
+			"explorer/context": [
+				{
+					"when": "explorerResourceIsFolder",
+					"command": "extension.generateTree",
+					"group": "navigation"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -40,6 +53,7 @@
 		"watch": "tsc -watch -p ./"
 	},
 	"devDependencies": {
+		"@types/node": "^17.0.10",
 		"@types/vscode": "^1.32.0",
 		"@typescript-eslint/eslint-plugin": "^4.16.0",
 		"@typescript-eslint/parser": "^4.16.0",
