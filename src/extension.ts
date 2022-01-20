@@ -5,33 +5,6 @@ import {treePath, treeDepth} from './tree';
 
 let myStatusBarItem: vscode.StatusBarItem;
 
-
-function gettree(dir: string, num_deep: number = -1){
-	
-	const treeArr = treePath(dir, num_deep);
-	const nums = Math.max(...treeArr.map(el=>el.str.length));
-	const tree = treeArr.map(el => el.str + ' '.repeat(nums-el.str.length+2)+'\n').join('');
-	return tree;
-}
-
-async function showInputBox(fsPath: string) {
-	const tree_depth = treeDepth(fsPath);
-	const result = await vscode.window.showInputBox({
-		value: '',
-		valueSelection: [2, 4],
-		placeHolder: `Input depth, no bigger than ${tree_depth} and no less than -${tree_depth}!`,
-		validateInput:text => {
-			let condition = Number(text) <= tree_depth && Number(text) >= -tree_depth
-			return  condition? null : `Not bigger than ${tree_depth} and not less than -${tree_depth}!`;  // return null if validates
-		}
-	});
-	vscode.window.showInformationMessage(`Got: ${result}, Max: ${tree_depth}`);
-	const str = gettree(fsPath, Number(result));
-	vscode.env.clipboard.writeText(str);
-	vscode.window.showInformationMessage(`Already copied to clipboard~`);
-	return result;
-}
-
 export function activate({ subscriptions }: vscode.ExtensionContext) {
 
 	// register a command that is invoked when the status bar
@@ -89,6 +62,33 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 
 	subscriptions.push(disposable);
 }
+
+function gettree(dir: string, num_deep: number = -1){
+	
+	const treeArr = treePath(dir, num_deep);
+	const nums = Math.max(...treeArr.map(el=>el.str.length));
+	const tree = treeArr.map(el => el.str + ' '.repeat(nums-el.str.length+2)+'\n').join('');
+	return tree;
+}
+
+async function showInputBox(fsPath: string) {
+	const tree_depth = treeDepth(fsPath);
+	const result = await vscode.window.showInputBox({
+		value: '',
+		valueSelection: [2, 4],
+		placeHolder: `Input depth, no bigger than ${tree_depth} and no less than -${tree_depth}!`,
+		validateInput:text => {
+			let condition = Number(text) <= tree_depth && Number(text) >= -tree_depth
+			return  condition? null : `Not bigger than ${tree_depth} and not less than -${tree_depth}!`;  // return null if validates
+		}
+	});
+	vscode.window.showInformationMessage(`Got: ${result}, Max: ${tree_depth}`);
+	const str = gettree(fsPath, Number(result));
+	vscode.env.clipboard.writeText(str);
+	vscode.window.showInformationMessage(`Already copied to clipboard~`);
+	return result;
+}
+
 
 function between(x:number, min:number, max:number) {
   return x >= min && x <= max;
