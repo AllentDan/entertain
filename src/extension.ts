@@ -1,26 +1,30 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import {treePath} from './tree';
+import {treePath, treeDepth} from './tree';
 
 let myStatusBarItem: vscode.StatusBarItem;
 
 
-function gettree(dir: string){
+function gettree(dir: string, num_deep: number = -1){
 	
-	const treeArr = treePath(dir);
+	const treeArr = treePath(dir, num_deep);
 	const nums = Math.max(...treeArr.map(el=>el.str.length));
 	const tree = treeArr.map(el => el.str + ' '.repeat(nums-el.str.length+2)+'\n').join('');
 	return tree;
 }
 
-function showInputBox() {
-	const result = vscode.window.showInputBox({
-		value: 'abcdef',
+async function showInputBox(fsPath: string) {
+	const tree_depth = treeDepth(fsPath);
+	const result = await vscode.window.showInputBox({
+		value: '-1',
 		valueSelection: [2, 4],
 		placeHolder: 'For example: fedcba. But not: 123',
 	});
-	vscode.window.showInformationMessage(`Got: ${result}`);
+	vscode.window.showInformationMessage(`Got: ${result}, Max: ${tree_depth}`);
+	const str = gettree(fsPath, Number(result));
+	vscode.env.clipboard.writeText(str);
+	vscode.window.showInformationMessage(`♥︎目录树已经复制到剪贴板上了~`);
 	return result;
 }
 
@@ -53,10 +57,7 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 
 	const generateTree = vscode.commands.registerCommand('extension.generateTree', function (uri) {
 		// The code you place here will be executed every time your command is executed
-		const quickPick = vscode.window.showInputBox();
-		const str = gettree(uri.fsPath);
-		vscode.env.clipboard.writeText(str);
-		vscode.window.showInformationMessage(`♥︎目录树已经复制到剪贴板上了~`);
+		let input = showInputBox(uri.fsPath);
 	});
 
 	subscriptions.push(generateTree);
