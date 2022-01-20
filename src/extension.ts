@@ -17,9 +17,9 @@ function gettree(dir: string, num_deep: number = -1){
 async function showInputBox(fsPath: string) {
 	const tree_depth = treeDepth(fsPath);
 	const result = await vscode.window.showInputBox({
-		value: '0',
+		value: '',
 		valueSelection: [2, 4],
-		placeHolder: 'For example: fedcba. But not: 123',
+		placeHolder: `Input depth, no bigger than ${tree_depth} and no less than -${tree_depth}!`,
 		validateInput:text => {
 			let condition = Number(text) <= tree_depth && Number(text) >= -tree_depth
 			return  condition? null : `Not bigger than ${tree_depth} and not less than -${tree_depth}!`;  // return null if validates
