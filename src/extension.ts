@@ -17,14 +17,18 @@ function gettree(dir: string, num_deep: number = -1){
 async function showInputBox(fsPath: string) {
 	const tree_depth = treeDepth(fsPath);
 	const result = await vscode.window.showInputBox({
-		value: '-1',
+		value: '0',
 		valueSelection: [2, 4],
 		placeHolder: 'For example: fedcba. But not: 123',
+		validateInput:text => {
+			let condition = Number(text) <= tree_depth && Number(text) >= -tree_depth
+			return  condition? null : `Not bigger than ${tree_depth} and not less than -${tree_depth}!`;  // return null if validates
+		}
 	});
 	vscode.window.showInformationMessage(`Got: ${result}, Max: ${tree_depth}`);
 	const str = gettree(fsPath, Number(result));
 	vscode.env.clipboard.writeText(str);
-	vscode.window.showInformationMessage(`♥︎目录树已经复制到剪贴板上了~`);
+	vscode.window.showInformationMessage(`Already copied to clipboard~`);
 	return result;
 }
 

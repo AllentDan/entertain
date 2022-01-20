@@ -1,15 +1,19 @@
 // const fs = require("fs");
 import * as fs from 'fs';
 import * as path from 'path';
-import { StringifyOptions } from 'querystring';
 
 // const path = require("path");
 const ignore = ['node_modules'];
-var DEPTH = -1;
-var MAX_DEPTH = -1;
+var DEPTH = 0;
+var MAX_DEPTH = 1;
 
 export const treePath = function(dir: string, num_deep: number = -1) {
     DEPTH = num_deep;
+    if (DEPTH <0){
+        DEPTH = DEPTH + MAX_DEPTH;
+    }
+    MAX_DEPTH = 1;
+
     const treeArr = [{
         name: path.basename(dir),
         str: path.basename(dir)
@@ -61,7 +65,7 @@ export const treePath = function(dir: string, num_deep: number = -1) {
     return treeArr;
 }
 
-export const treeDepth = function(dir: string) {
+export const treeDepth = function(dir: string):Number {
     
     const render = function(name: string, isLast: boolean, deep: Array<boolean>){
         const line = deep.map(el=>`${el?'│':' '}  `).join('');
@@ -87,18 +91,15 @@ export const treeDepth = function(dir: string) {
                     direct.push(el);
                 }
             }
-            
         })
         direct.forEach(function(el,i){
             const dir = path.join(target,el);
             const isLast = (i === direct.length -1) && (file.length === 0);
-            MAX_DEPTH = MAX_DEPTH<=deep.length + 1? deep.length: MAX_DEPTH;
+            MAX_DEPTH = MAX_DEPTH<=deep.length + 2? deep.length +2: MAX_DEPTH;
             tree(dir, [...deep,!isLast]);
         })
     }
     
     tree(dir);
-    const max_depth = MAX_DEPTH;
-    MAX_DEPTH = -1;
-    return max_depth;
+    return MAX_DEPTH;
 }
