@@ -3,7 +3,7 @@
 	"displayName": "Entertain",
 	"description": "Shows the number of selected lines in the status bar",
 	"icon": "resources/entertain.png",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"publisher": "Allent",
 	"private": true,
 	"license": "MIT",

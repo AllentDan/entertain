@@ -49,11 +49,12 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 
 			// Get the word within the selection
 			const content = document.getText(selection);
-			const replaced = content.replaceAll('<table>','<table class=\'docutils\'>')
+			const replaced = content.replaceAll('<table>','<table class=\"docutils\">')
 			.replaceAll('<td r','<td align="center" r').replaceAll('<td c','<td align="center" c')
 			.replaceAll('<td>','<td align="center">').replaceAll('<th r','<th align="center" r')
 			.replaceAll('<th c','<th align="center" c').replaceAll('<td align="center">$MM','<td>$MM')
-			.replaceAll('<td align="center" rowspan="2">model config file</td>','<td rowspan="2">model config file</td>');
+			.replaceAll('<td align="center" rowspan="2">model config file</td>','<td rowspan="2">model config file</td>')
+			.replaceAll('<td align="center" rowspan="3">model config file</td>','<td rowspan="3">model config file</td>');
 			editor.edit(editBuilder => {
 				editBuilder.replace(selection, replaced);
 			});
