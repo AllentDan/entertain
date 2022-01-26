@@ -29,10 +29,12 @@
 		"commands": [
 			{
 				"command": "extension.formatTable",
+				"category": "Entertain",
 				"title": "Format table to sphinx style"
 			},
 			{
 				"command": "extension.generateTree",
+				"category": "Entertain",
 				"title": "Genrate a tree"
 			}
 		],
@@ -41,6 +43,7 @@
 				{
 					"when": "explorerResourceIsFolder",
 					"command": "extension.generateTree",
+					"category": "Entertain",
 					"group": "navigation"
 				}
 			]
