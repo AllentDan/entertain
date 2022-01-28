@@ -39,7 +39,7 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 
 	subscriptions.push(generateTree);
 
-	const disposable = vscode.commands.registerCommand('extension.formatTable', function () {
+	const disposable = vscode.commands.registerCommand('extension.bulkReplace', function () {
 		// Get the active text editor
 		const editor = vscode.window.activeTextEditor;
 
@@ -48,15 +48,19 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 			const selection = editor.selection;
 
 			// Get the word within the selection
-			const content = document.getText(selection);
-			const replaced = content.replaceAll('<table>','<table class=\"docutils\">')
-			.replaceAll('<td r','<td align="center" r').replaceAll('<td c','<td align="center" c')
-			.replaceAll('<td>','<td align="center">').replaceAll('<th r','<th align="center" r')
-			.replaceAll('<th c','<th align="center" c').replaceAll('<td align="center">$MM','<td>$MM')
-			.replaceAll('<td align="center" rowspan="2">model config file</td>','<td rowspan="2">model config file</td>')
-			.replaceAll('<td align="center" rowspan="3">model config file</td>','<td rowspan="3">model config file</td>');
-			editor.edit(editBuilder => {
-				editBuilder.replace(selection, replaced);
+			let content = document.getText(selection);
+			const bulkReplaceConfig = vscode.workspace.getConfiguration('entertain.bulkReplace');
+			let num = 0;
+			for (let key in bulkReplaceConfig) {
+				// skip the function item like update
+				if (num <4){
+					num = num+1;
+					continue;
+				}
+				let value = bulkReplaceConfig[key];
+				content = content.replaceAll(key, value);
+			}editor.edit(editBuilder => {
+				editBuilder.replace(selection, content);
 			});
 		}
 	});

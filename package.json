@@ -3,7 +3,7 @@
 	"displayName": "Entertain",
 	"description": "Shows the number of selected lines in the status bar",
 	"icon": "resources/entertain.png",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"publisher": "Allent",
 	"private": true,
 	"license": "MIT",
@@ -22,15 +22,15 @@
 	],
 	"activationEvents": [
 		"*",
-		"onCommand:extension.formatTable"
+		"onCommand:extension.bulkReplace"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.formatTable",
+				"command": "extension.bulkReplace",
 				"category": "Entertain",
-				"title": "Format table to sphinx style"
+				"title": "Replace all you want by selecting"
 			},
 			{
 				"command": "extension.generateTree",
@@ -47,7 +47,18 @@
 					"group": "navigation"
 				}
 			]
-		}
+		},
+		"configuration": {
+        "type": "object",
+        "title": "Bulk replacement setting for entertain",
+        "properties": {
+            "entertain.bulkReplace": {
+                "type": "object",
+                "default": {},
+                "description": "Bulk replacement setting for entertain"
+            }
+        }
+    }
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
