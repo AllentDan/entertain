@@ -22,18 +22,18 @@
 	],
 	"activationEvents": [
 		"*",
-		"onCommand:extension.bulkReplace"
+		"onCommand:entertain.bulkReplace"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.bulkReplace",
+				"command": "entertain.bulkReplace",
 				"category": "Entertain",
 				"title": "Replace all you want by selecting"
 			},
 			{
-				"command": "extension.generateTree",
+				"command": "entertain.generateTree",
 				"category": "Entertain",
 				"title": "Genrate a tree"
 			}
@@ -42,7 +42,7 @@
 			"explorer/context": [
 				{
 					"when": "explorerResourceIsFolder",
-					"command": "extension.generateTree",
+					"command": "entertain.generateTree",
 					"category": "Entertain",
 					"group": "navigation"
 				}
@@ -56,6 +56,11 @@
                 "type": "object",
                 "default": {},
                 "description": "Bulk replacement setting for entertain"
+            },
+            "entertain.generateTree": {
+                "type": "object",
+                "default": {"num_width":9999, "num_depth":9999},
+                "description": "Setting number of width and depth of a tree"
             }
         }
     }

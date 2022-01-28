@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import {treePath, treeDepth} from './tree';
+import {treePath} from './tree';
 
 let myStatusBarItem: vscode.StatusBarItem;
 
@@ -32,14 +32,14 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	// update status bar item once at start
 	updateStatusBarItem();
 
-	const generateTree = vscode.commands.registerCommand('extension.generateTree', function (uri) {
+	const generateTree = vscode.commands.registerCommand('entertain.generateTree', function (uri) {
 		// The code you place here will be executed every time your command is executed
 		let input = showInputBox(uri.fsPath);
 	});
 
 	subscriptions.push(generateTree);
 
-	const disposable = vscode.commands.registerCommand('extension.bulkReplace', function () {
+	const disposable = vscode.commands.registerCommand('entertain.bulkReplace', function () {
 		// Get the active text editor
 		const editor = vscode.window.activeTextEditor;
 
@@ -68,30 +68,22 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(disposable);
 }
 
-function gettree(dir: string, num_deep: number = -1){
+function gettree(dir: string, num_deep: number = 9999, num_width: number = 9999){
 	
-	const treeArr = treePath(dir, num_deep);
+	const treeArr = treePath(dir, num_deep, num_width);
 	const nums = Math.max(...treeArr.map(el=>el.str.length));
 	const tree = treeArr.map(el => el.str + ' '.repeat(nums-el.str.length+2)+'\n').join('');
 	return tree;
 }
 
-async function showInputBox(fsPath: string) {
-	const tree_depth = treeDepth(fsPath);
-	const result = await vscode.window.showInputBox({
-		value: '',
-		valueSelection: [2, 4],
-		placeHolder: `Input depth, no bigger than ${tree_depth} and no less than -${tree_depth}!`,
-		validateInput:text => {
-			let condition = Number(text) <= tree_depth && Number(text) >= -tree_depth
-			return  condition? null : `Not bigger than ${tree_depth} and not less than -${tree_depth}!`;  // return null if validates
-		}
-	});
-	vscode.window.showInformationMessage(`Got: ${result}, Max: ${tree_depth}`);
-	const str = gettree(fsPath, Number(result));
+function showInputBox(fsPath: string) {
+	const generateTreeConfig = vscode.workspace.getConfiguration('entertain.generateTree');
+	const num_width =  generateTreeConfig['num_width']
+	const num_depth = generateTreeConfig['num_depth']
+	const str = gettree(fsPath, Number(num_depth), Number(num_width));
 	vscode.env.clipboard.writeText(str);
 	vscode.window.showInformationMessage(`Already copied to clipboard~`);
-	return result;
+	return;
 }
 
 
