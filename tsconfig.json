@@ -3,13 +3,13 @@
 		"module": "commonjs",
 		"target": "es2019",
 		"lib": ["ES2019","es2021"],
-		"outDir": "out",
 		"sourceMap": true,
 		"strict": true,
 		"rootDir": "src"
 	},
 	"exclude": [
 		"node_modules",
-		".vscode-test"
+		".vscode-test",
+		"webviews"
 	]
 }

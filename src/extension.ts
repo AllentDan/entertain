@@ -2,15 +2,21 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import {treePath} from './tree';
+import { SidebarProvider } from "./SidebarProvider";
 
 let myStatusBarItem: vscode.StatusBarItem;
 
-export function activate({ subscriptions }: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext) {
 
+	const sidebarProvider = new SidebarProvider(context.extensionUri);
+	context.subscriptions.push(
+		vscode.window.registerWebviewViewProvider("entertain-sidebar", sidebarProvider)
+	);
+	vscode.commands.executeCommand("workbench.view.extension.entertain-view");
 	// register a command that is invoked when the status bar
 	// item is selected
 	const myCommandId = 'sample.showSelectionCount';
-	subscriptions.push(vscode.commands.registerCommand(myCommandId, () => {
+	context.subscriptions.push(vscode.commands.registerCommand(myCommandId, () => {
 		let day = updateStatusBarItem();
 		if (day == 'Workday'){
 			vscode.window.showInformationMessage(`快去搬砖`);
@@ -22,12 +28,12 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	// create a new status bar item that we can now manage
 	myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
 	myStatusBarItem.command = myCommandId;
-	subscriptions.push(myStatusBarItem);
+	context.subscriptions.push(myStatusBarItem);
 
 	// register some listener that make sure the status bar 
 	// item always up-to-date
-	subscriptions.push(vscode.window.onDidChangeActiveTextEditor(updateStatusBarItem));
-	subscriptions.push(vscode.window.onDidChangeTextEditorSelection(updateStatusBarItem));
+	context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(updateStatusBarItem));
+	context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(updateStatusBarItem));
 
 	// update status bar item once at start
 	updateStatusBarItem();
@@ -37,7 +43,7 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 		let input = showInputBox(uri.fsPath);
 	});
 
-	subscriptions.push(generateTree);
+	context.subscriptions.push(generateTree);
 
 	const disposable = vscode.commands.registerCommand('entertain.bulkReplace', function () {
 		// Get the active text editor
@@ -65,7 +71,7 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 		}
 	});
 
-	subscriptions.push(disposable);
+	context.subscriptions.push(disposable);
 }
 
 function gettree(dir: string, num_deep: number = 9999, num_width: number = 9999){

@@ -2,8 +2,8 @@
 	"name": "Entertain",
 	"displayName": "Entertain",
 	"description": "Shows the number of selected lines in the status bar",
-	"icon": "resources/entertain.png",
-	"version": "0.0.5",
+	"icon": "media/entertain.png",
+	"version": "0.0.6",
 	"publisher": "Allent",
 	"private": true,
 	"license": "MIT",
@@ -22,10 +22,31 @@
 	],
 	"activationEvents": [
 		"*",
-		"onCommand:entertain.bulkReplace"
+		"onCommand:entertain.bulkReplace",
+		"onView:entertain-sidebar"
 	],
-	"main": "./out/extension.js",
+	"main": "./dist/extension.js",
 	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "entertain-view",
+					"title": "Entertain",
+					"icon": "media/rocket.svg"
+				}
+			]
+		},
+		"views": {
+			"entertain-view": [
+				{
+					"type": "webview",
+					"id": "entertain-sidebar",
+					"name": "Entertain",
+					"icon": "media/rocket.svg",
+					"contextualTitle": "Entertain"
+				}
+			]
+		},
 		"commands": [
 			{
 				"command": "entertain.bulkReplace",
@@ -49,34 +70,67 @@
 			]
 		},
 		"configuration": {
-        "type": "object",
-        "title": "Bulk replacement setting for entertain",
-        "properties": {
-            "entertain.bulkReplace": {
-                "type": "object",
-                "default": {},
-                "description": "Bulk replacement setting for entertain"
-            },
-            "entertain.generateTree": {
-                "type": "object",
-                "default": {"num_width":9999, "num_depth":9999},
-                "description": "Setting number of width and depth of a tree"
-            }
-        }
-    }
+			"type": "object",
+			"title": "Bulk replacement setting for entertain",
+			"properties": {
+				"entertain.bulkReplace": {
+					"type": "object",
+					"default": {},
+					"description": "Bulk replacement setting for entertain"
+				},
+				"entertain.generateTree": {
+					"type": "object",
+					"default": {
+						"num_width": 9999,
+						"num_depth": 9999
+					},
+					"description": "Setting number of width and depth of a tree"
+				}
+			}
+		}
 	},
+
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"lint": "eslint . --ext .ts,.tsx",
-		"watch": "tsc -watch -p ./"
+		"vscode:prepublish": "npm run package",
+		"compile": "webpack --config ./build/node-extension.webpack.config.js",
+		"watch": "concurrently \"rollup -c -w\" \"webpack --watch --config ./build/node-extension.webpack.config.js\"",
+		"package": "webpack --mode production --devtool hidden-source-map --config ./build/node-extension.webpack.config.js",
+		"test-compile": "tsc -p ./",
+		"test-watch": "tsc -watch -p ./",
+		"pretest": "npm run test-compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/node": "^17.0.10",
+		"@rollup/plugin-commonjs": "^17.0.0",
+		"@rollup/plugin-node-resolve": "^11.0.1",
+		"@rollup/plugin-typescript": "^8.1.0",
+		"@tsconfig/svelte": "^1.0.10",
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.0.4",
+		"@types/node": "^12.11.7",
+		"@types/polka": "^0.5.1",
 		"@types/vscode": "^1.32.0",
-		"@typescript-eslint/eslint-plugin": "^4.16.0",
-		"@typescript-eslint/parser": "^4.16.0",
-		"eslint": "^7.21.0",
-		"typescript": "^4.4.3"
+		"@typescript-eslint/eslint-plugin": "^4.9.0",
+		"@typescript-eslint/parser": "^4.9.0",
+		"concurrently": "^5.3.0",
+		"eslint": "^7.15.0",
+		"glob": "^7.1.6",
+		"mocha": "^8.1.3",
+		"rollup": "^2.3.4",
+		"rollup-plugin-svelte": "^6.0.0",
+		"rollup-plugin-terser": "^7.0.2",
+		"svelte": "^3.31.0",
+		"svelte-check": "^1.1.23",
+		"svelte-preprocess": "^4.6.1",
+		"ts-loader": "^8.0.11",
+		"typescript": "^4.1.2",
+		"vscode-test": "^1.4.1",
+		"webpack": "^5.10.0",
+		"webpack-cli": "^4.2.0"
+	},
+	"dependencies": {
+		"polka": "^0.5.2",
+		"svelte-table": "^0.3.3"
 	}
 }
