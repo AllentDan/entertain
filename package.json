@@ -1,7 +1,7 @@
 {
 	"name": "Entertain",
 	"displayName": "Entertain",
-	"description": "Shows the number of selected lines in the status bar",
+	"description": "A plugin for entertainment.",
 	"icon": "media/entertain.png",
 	"version": "0.0.6",
 	"publisher": "Allent",
@@ -89,7 +89,6 @@
 			}
 		}
 	},
-
 	"scripts": {
 		"vscode:prepublish": "npm run package",
 		"compile": "webpack --config ./build/node-extension.webpack.config.js",
