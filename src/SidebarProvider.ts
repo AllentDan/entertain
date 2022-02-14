@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
+import { Util } from "./utils";
 export class SidebarProvider implements vscode.WebviewViewProvider {
     _view?: vscode.WebviewView;
     _doc?: vscode.TextDocument;
@@ -75,6 +76,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         <link href="${styleMainUri}" rel="stylesheet">
         <script nonce="${nonce}">
             const tsvscode = acquireVsCodeApi();
+            let getTodoFile = ${JSON.stringify(Util.getWorkspaceConfig('entertain').todoFile)};
         </script>
 			</head>
       <body>

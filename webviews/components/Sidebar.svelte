@@ -20,13 +20,12 @@
     });
 
     let todos = tsvscode.getState()?.todos || [];
-    console.log(todos);
+    let config = getTodoFile;
     let uid = todos.length + 1;
 
     $: {
         tsvscode.setState({ todos });
     }
-
 
     function add(input) {
         const todo = {
@@ -82,6 +81,18 @@
     </div>
 </div>
 
+<!-- <script>
+
+</script>
+<button on:click={() =>{
+    tsvscode.postMessage({
+        type: 'onInfo',
+        value: 'info message'
+    })
+}}>click me
+</button> -->
+
+<!-- <div>Hello</div> -->
 <style>
     .new-todo {
         font-size: 1.4em;
@@ -146,16 +157,3 @@
         opacity: 1;
     }
 </style>
-
-<!-- <script>
-
-</script>
-<button on:click={() =>{
-    tsvscode.postMessage({
-        type: 'onInfo',
-        value: 'info message'
-    })
-}}>click me
-</button> -->
-
-<!-- <div>Hello</div> -->

@@ -85,6 +85,11 @@
 						"num_depth": 9999
 					},
 					"description": "Setting number of width and depth of a tree"
+				},
+				"entertain.todoFile": {
+					"type": "string",
+					"default": "",
+					"description": "the file to save todo informations"
 				}
 			}
 		}
