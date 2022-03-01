@@ -56,7 +56,7 @@
 			{
 				"command": "entertain.generateTree",
 				"category": "Entertain",
-				"title": "Genrate a tree"
+				"title": "Generate a tree"
 			}
 		],
 		"menus": {
